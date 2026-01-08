@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import bcrypt from "bcryptjs";
 
 export const googleCallback = (req, res) => {
   try {
@@ -39,9 +40,16 @@ export const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({ name, email, password: hashedPassword, googleId: 'local' });
+    const token = jwt.sign(
+      { id: newUser._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
+    
     await newUser.save();
-
+    console.log("New user registered:", newUser);
+    res.status(201).json({ token });
     res.status(201).json({ message: "User registered successfully." });
 
   } catch (error) {
@@ -63,7 +71,7 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
@@ -73,9 +81,10 @@ export const loginUser = async (req, res) => {
       { expiresIn: "7d" }
     );
     res.status(200).json({ token });
-    
+
   } catch (error) {
     console.error("Error logging in user:", error);
     return res.status(500).json({ message: "Server error." });
   }
 }
+
