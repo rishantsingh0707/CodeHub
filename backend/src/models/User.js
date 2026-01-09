@@ -8,20 +8,24 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        select: false, 
+        select: false,
     }
     ,
     avatar: {
         type: String, default: ''
     },
     googleId: {
-        type: String, unique: true
+        type: String, unique: true, sparse: true
     },
     followers: {
-        type: String
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
     },
     following: {
-        type: [String], default: []
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
     },
     longestStreak: {
         type: Number, default: 0
@@ -38,7 +42,7 @@ const userSchema = new mongoose.Schema({
     skills: {
         type: [String], default: []
     },
-},{timestamps: true});
+}, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
 

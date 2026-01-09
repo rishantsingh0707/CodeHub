@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const DailylogSchema = new mongoose.Schema({
+const DailyTaskSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -14,12 +14,13 @@ const DailylogSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    likeCount: {
-        type: Number,
-        default: 0
-    }
+    likes: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
+    },
 }, { timestamps: true });
 
-const Dailylog = mongoose.model("Dailylog", DailylogSchema);
+const DailyTask = mongoose.model("DailyTask", DailyTaskSchema);
 
-export default Dailylog;
+export default DailyTask;
