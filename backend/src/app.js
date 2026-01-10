@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import passport from 'passport';
 import authRoutes from './routes/auth.Route.js';
+import taskRoutes from './routes/tasks.Route.js';
+import commentRoutes from './routes/comment.Route.js';
 import './config/passport.js';
 import mongoose from 'mongoose';
 
@@ -17,7 +19,7 @@ mongoose.connect(process.env.MONGO_URI, {}).then(() => {
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: process.env.FRONTEND_URL,
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
     })
@@ -25,6 +27,9 @@ app.use(
 app.use(express.json());
 app.use(passport.initialize());
 app.use("/auth", authRoutes);
+app.use("/tasks",taskRoutes);
+app.use("/comments", commentRoutes);
+
 app.get("/", (req, res) => { res.send("Hello World") })
 
 app.listen(process.env.PORT, () => { console.log(`Server is running on port ${process.env.PORT}`) });

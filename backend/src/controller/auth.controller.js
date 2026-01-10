@@ -23,7 +23,6 @@ export const googleCallback = (req, res) => {
   }
 };
 
-
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -46,7 +45,7 @@ export const registerUser = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    
+
     await newUser.save();
     console.log("New user registered:", newUser);
     res.status(201).json({ token });
@@ -68,10 +67,10 @@ export const loginUser = async (req, res) => {
 
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials." });
+      return res.status(401).json({ message: "User not found." });
     }
 
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
@@ -80,6 +79,7 @@ export const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
+    console.log("User logged in:", user);
     res.status(200).json({ token });
 
   } catch (error) {

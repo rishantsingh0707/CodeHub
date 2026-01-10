@@ -1,12 +1,13 @@
 import express from 'express';
 import { protect } from '../middleware/authMiddleware.js';
-import { getDailyTasks, createDailyTask, deleteDailyTask,likeDailyTask } from '../controller/tasks.controllers.js';
+import {getAllDailyTasks, getTaskById, createDailyTask, deleteDailyTask,likeDailyTask } from '../controller/tasks.controllers.js';
 
 const router = express.Router();
 
 // Task routes
 
-router.get("/:id", protect,getDailyTasks);
+router.get("/", protect, getAllDailyTasks);
+router.get("/:id", protect,getTaskById);
 router.delete("/:id/delete", protect, deleteDailyTask);
 router.post("/post", protect, createDailyTask);
 

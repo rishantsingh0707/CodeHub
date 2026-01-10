@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const CommentSchema = new mongoose.Schema({
-    task: {
+    taskId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'DailyTask',
         required: true
@@ -11,7 +11,7 @@ const CommentSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    content: {
+    comment: {
         type: String,
         required: true
     },
